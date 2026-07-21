@@ -178,14 +178,18 @@ export type ElementRenderers = {
 
 export type RenderMark = (mark: Mark) => React.ReactNode;
 
-export type ConfiguredBlockNode<Blocks extends { [key: string]: any }> = {
+export type ConfiguredBlockNode<
+    Blocks extends { [key: string]: any } = { [key: string]: any },
+> = {
     [BlockName in Extract<keyof Blocks, string>]: BlockNode<
         Blocks[BlockName],
         BlockName
     >;
 }[Extract<keyof Blocks, string>];
 
-export type RenderBlock<Blocks extends { [key: string]: any }> = (props: {
+export type RenderBlock<
+    Blocks extends { [key: string]: any } = { [key: string]: any },
+> = (props: {
     children: React.ReactNode;
     node: ConfiguredBlockNode<Blocks>;
 }) => React.ReactNode;
@@ -195,7 +199,7 @@ export type PayloadLexicalReactRendererContent = {
 };
 
 export type PayloadLexicalReactRendererProps<
-    Blocks extends { [key: string]: any },
+    Blocks extends { [key: string]: any } = { [key: string]: any },
 > = {
     content: PayloadLexicalReactRendererContent;
     elementRenderers?: ElementRenderers;
@@ -340,7 +344,7 @@ export const defaultRenderMark: RenderMark = (mark) => {
 };
 
 export function PayloadLexicalReactRenderer<
-    Blocks extends { [key: string]: any },
+    Blocks extends { [key: string]: any } = { [key: string]: any },
 >({
       content,
       elementRenderers = defaultElementRenderers,

@@ -37,10 +37,6 @@ describe("Simple working test", () => {
   });
 });
 
-type Intro = {
-  text: string;
-};
-
 const blockContent: PayloadLexicalReactRendererContent = {
   root: {
     type: "root",
@@ -76,7 +72,7 @@ const blockContent: PayloadLexicalReactRendererContent = {
 describe("Block rendering", () => {
   it("renders blocks unchanged when renderBlock is omitted", () => {
     render(
-      <PayloadLexicalReactRenderer<{ intro: Intro }>
+      <PayloadLexicalReactRenderer
         content={blockContent}
         blockRenderers={{
           intro: (node) => <p>{node.fields.text}</p>,
@@ -90,7 +86,7 @@ describe("Block rendering", () => {
 
   it("wraps every rendered block and provides its source node", () => {
     render(
-      <PayloadLexicalReactRenderer<{ intro: Intro }>
+      <PayloadLexicalReactRenderer
         content={blockContent}
         blockRenderers={{
           intro: (node) => <p>{node.fields.text}</p>,

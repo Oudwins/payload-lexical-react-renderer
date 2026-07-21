@@ -128,9 +128,7 @@ Use `renderBlock` to wrap every rendered block with the same layout. The callbac
 receives the rendered block as `children` and its source Lexical node:
 
 ```tsx
-<PayloadLexicalReactRenderer<{
-  intro: Intro;
-}>
+<PayloadLexicalReactRenderer
   content={content}
   blockRenderers={{
     intro: (props) => <Intro {...props.fields} />,
