@@ -208,6 +208,8 @@ export type PayloadLexicalReactRendererProps<
         [BlockName in Extract<keyof Blocks, string>]?: (
             props: BlockNode<Blocks[BlockName], BlockName>
         ) => React.ReactNode;
+    } & {
+        catchall?: (props: UnknownBlockNode) => React.ReactNode;
     };
     renderBlock?: RenderBlock<Blocks>;
 };
@@ -469,9 +471,10 @@ export function PayloadLexicalReactRenderer<
                 }
 
                 if (node.type === "block") {
-                    const renderer = blockRenderers[node.fields.blockType] as (
-                        props: unknown
-                    ) => React.ReactNode;
+                    const renderer = (blockRenderers[node.fields.blockType] ??
+                        blockRenderers.catchall) as
+                        | ((props: UnknownBlockNode) => React.ReactNode)
+                        | undefined;
 
                     if (typeof renderer !== "function") {
                         throw new Error(

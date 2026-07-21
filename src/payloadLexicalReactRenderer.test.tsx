@@ -107,4 +107,17 @@ describe("Block rendering", () => {
     expect(wrappers[1]).toHaveAttribute("data-block-id", "second");
     expect(wrappers[1]).toHaveTextContent("Second intro");
   });
+
+  it("uses the catchall renderer for unmatched blocks", () => {
+    render(
+      <PayloadLexicalReactRenderer
+        content={blockContent}
+        blockRenderers={{
+          catchall: (node) => <p>Unsupported {node.fields.blockType}</p>,
+        }}
+      />,
+    );
+
+    expect(screen.getAllByText("Unsupported intro")).toHaveLength(2);
+  });
 });

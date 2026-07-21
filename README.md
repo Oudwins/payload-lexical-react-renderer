@@ -124,6 +124,19 @@ type Intro = {
  />
 ```
 
+Add an optional `catchall` renderer to handle blocks without a matching renderer.
+Specific block renderers take precedence:
+
+```tsx
+<PayloadLexicalReactRenderer
+  content={content}
+  blockRenderers={{
+    intro: (props) => <Intro {...props.fields} />,
+    catchall: (node) => <UnsupportedBlock type={node.fields.blockType} />,
+  }}
+/>
+```
+
 Use `renderBlock` to wrap every rendered block with the same layout. The callback
 receives the rendered block as `children` and its source Lexical node:
 
