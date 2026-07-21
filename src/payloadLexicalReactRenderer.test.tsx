@@ -36,3 +36,79 @@ describe("Simple working test", () => {
     expect(text).toBeInTheDocument();
   });
 });
+
+type Intro = {
+  text: string;
+};
+
+const blockContent: PayloadLexicalReactRendererContent = {
+  root: {
+    type: "root",
+    format: "",
+    indent: 0,
+    version: 1,
+    children: [
+      {
+        type: "block",
+        version: 1,
+        fields: {
+          id: "first",
+          blockName: "",
+          blockType: "intro",
+          text: "First intro",
+        },
+      },
+      {
+        type: "block",
+        version: 1,
+        fields: {
+          id: "second",
+          blockName: "",
+          blockType: "intro",
+          text: "Second intro",
+        },
+      },
+    ],
+    direction: "ltr",
+  },
+};
+
+describe("Block rendering", () => {
+  it("renders blocks unchanged when renderBlock is omitted", () => {
+    render(
+      <PayloadLexicalReactRenderer<{ intro: Intro }>
+        content={blockContent}
+        blockRenderers={{
+          intro: (node) => <p>{node.fields.text}</p>,
+        }}
+      />,
+    );
+
+    expect(screen.getByText("First intro").tagName).toBe("P");
+    expect(screen.getByText("Second intro").tagName).toBe("P");
+  });
+
+  it("wraps every rendered block and provides its source node", () => {
+    render(
+      <PayloadLexicalReactRenderer<{ intro: Intro }>
+        content={blockContent}
+        blockRenderers={{
+          intro: (node) => <p>{node.fields.text}</p>,
+        }}
+        renderBlock={({ children, node }) => (
+          <section data-testid="block-layout" data-block-id={node.fields.id}>
+            {children}
+          </section>
+        )}
+      />,
+    );
+
+    const wrappers = screen.getAllByTestId("block-layout");
+
+    expect(wrappers).toHaveLength(2);
+    expect(wrappers[0]).toHaveAttribute("data-block-id", "first");
+    expect(wrappers[0]).toHaveTextContent("First intro");
+    expect(wrappers[1]).toHaveAttribute("data-block-id", "second");
+    expect(wrappers[1]).toHaveTextContent("Second intro");
+  });
+});

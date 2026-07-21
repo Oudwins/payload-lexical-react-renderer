@@ -178,6 +178,18 @@ export type ElementRenderers = {
 
 export type RenderMark = (mark: Mark) => React.ReactNode;
 
+export type ConfiguredBlockNode<Blocks extends { [key: string]: any }> = {
+    [BlockName in Extract<keyof Blocks, string>]: BlockNode<
+        Blocks[BlockName],
+        BlockName
+    >;
+}[Extract<keyof Blocks, string>];
+
+export type RenderBlock<Blocks extends { [key: string]: any }> = (props: {
+    children: React.ReactNode;
+    node: ConfiguredBlockNode<Blocks>;
+}) => React.ReactNode;
+
 export type PayloadLexicalReactRendererContent = {
     root: Root;
 };
@@ -193,6 +205,7 @@ export type PayloadLexicalReactRendererProps<
             props: BlockNode<Blocks[BlockName], BlockName>
         ) => React.ReactNode;
     };
+    renderBlock?: RenderBlock<Blocks>;
 };
 
 // This copy-and-pasted from somewhere in lexical here: https://github.com/facebook/lexical/blob/c2ceee223f46543d12c574e62155e619f9a18a5d/packages/lexical/src/LexicalConstants.ts
@@ -333,6 +346,7 @@ export function PayloadLexicalReactRenderer<
       elementRenderers = defaultElementRenderers,
       renderMark = defaultRenderMark,
       blockRenderers = {},
+      renderBlock,
   }: PayloadLexicalReactRendererProps<Blocks>) {
     const renderElement = React.useCallback(
         (node: Node, children?: React.ReactNode) => {
@@ -461,7 +475,18 @@ export function PayloadLexicalReactRenderer<
                         );
                     }
 
-                    return <React.Fragment key={index}>{renderer(node)}</React.Fragment>;
+                    const renderedBlock = renderer(node);
+
+                    return (
+                        <React.Fragment key={index}>
+                            {renderBlock
+                                ? renderBlock({
+                                    children: renderedBlock,
+                                    node: node as ConfiguredBlockNode<Blocks>,
+                                })
+                                : renderedBlock}
+                        </React.Fragment>
+                    );
                 }
 
                 if (
@@ -477,11 +502,11 @@ export function PayloadLexicalReactRenderer<
 
                 return (
                     <React.Fragment key={index}>
-                        {renderElement(node, serialize(node.children || []))}
+                        {renderElement(node, serialize(node.children || []))}
                     </React.Fragment>
                 );
             }),
-        [renderElement, renderText, blockRenderers]
+        [renderElement, renderText, blockRenderers, renderBlock]
     );
 
     return <>{serialize(content.root.children)}</>;

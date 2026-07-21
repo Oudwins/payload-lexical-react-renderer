@@ -121,5 +121,22 @@ type Intro = {
       </div>
     ),
   }}
+ />
+```
+
+Use `renderBlock` to wrap every rendered block with the same layout. The callback
+receives the rendered block as `children` and its source Lexical node:
+
+```tsx
+<PayloadLexicalReactRenderer<{
+  intro: Intro;
+}>
+  content={content}
+  blockRenderers={{
+    intro: (props) => <Intro {...props.fields} />,
+  }}
+  renderBlock={({ children, node }) => (
+    <BlockLayout blockType={node.fields.blockType}>{children}</BlockLayout>
+  )}
 />
 ```
