@@ -1,6 +1,6 @@
 {
   "name": "@oudwins/payload-lexical-react-renderer",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A react component for rendering the lexical editor state to jsx",
   "type": "module",
   "scripts": {
