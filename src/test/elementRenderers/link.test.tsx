@@ -1,5 +1,5 @@
-import { render} from "@testing-library/react";
-import { describe } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import {
   PayloadLexicalReactRenderer,
   PayloadLexicalReactRendererContent,
@@ -163,23 +163,31 @@ const content: PayloadLexicalReactRendererContent = {
   },
 };
 
-/** TODO: Extend link renderer (current is the default one) */
+describe("Testing custom link renderers", () => {
+  it("renders link URLs and new-tab targets", () => {
+    render(
+      <PayloadLexicalReactRenderer
+        content={content}
+        elementRenderers={{
+          ...defaultElementRenderers,
+          link: (element) => (
+            <a
+              href={element.fields.url}
+              target={element.fields.newTab ? "_blank" : "_self"}
+            >
+              {element.children}
+            </a>
+          ),
+        }}
+      />
+    );
 
-describe("Testing custom heading renderers", async () => {
-  render(
-    <PayloadLexicalReactRenderer
-      content={content}
-      elementRenderers={{
-        ...defaultElementRenderers,
-        link: (element) => (
-          <a
-            href={element.fields.url}
-            target={element.fields.newTab ? "_blank" : "_self"}
-          >
-            {element.children}
-          </a>
-        ),
-      }}
-    />
-  );
+    const externalLink = screen.getByRole("link", { name: "This" });
+    expect(externalLink).toHaveAttribute("href", "https://payloadcms.com/");
+    expect(externalLink).toHaveAttribute("target", "_blank");
+
+    const internalLink = screen.getByRole("link", { name: "this" });
+    expect(internalLink).toHaveAttribute("href", "https://");
+    expect(internalLink).toHaveAttribute("target", "_self");
+  });
 });

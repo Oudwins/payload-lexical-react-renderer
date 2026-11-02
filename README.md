@@ -1,4 +1,4 @@
-# @atelierdisko/payload-lexical-react-renderer
+# @oudwins/payload-lexical-react-renderer
 
 A react component for rendering the lexical editor state to jsx.
 
@@ -7,7 +7,7 @@ A react component for rendering the lexical editor state to jsx.
 Install the latest version by running:
 
 ```
-npm install @atelier-disko/payload-lexical-react-renderer
+npm install @oudwins/payload-lexical-react-renderer
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ import {
   PayloadLexicalReactRenderer,
   PayloadLexicalReactRendererProps,
   PayloadLexicalReactRendererContent
-} from "@atelier-disko/payload-lexical-react-renderer";
+} from "@oudwins/payload-lexical-react-renderer";
 
 function MyBlog() {
   const content: PayloadLexicalReactRendererContent = await fetchLexicalEditorState();
@@ -40,7 +40,7 @@ In order to customize the rendered result, use the `elementRenderers` prop to ov
 import {
   PayloadLexicalReactRenderer,
   defaultElementRenderers,
-} from "@atelier-disko/payload-lexical-react-renderer";
+} from "@oudwins/payload-lexical-react-renderer";
 
 <PayloadLexicalReactRenderer
   content={content}
@@ -67,7 +67,7 @@ import {
 To customize rendering of text marks like bold, italic etc., add your own `renderMark` function:
 
 ```js
-import { PayloadLexicalReactRenderer } from "@atelier-disko/payload-lexical-react-renderer";
+import { PayloadLexicalReactRenderer } from "@oudwins/payload-lexical-react-renderer";
 
 <PayloadLexicalReactRenderer
   content={content}
@@ -95,7 +95,7 @@ Payload allows you to re-use your custom blocks in its Lexical rich text editor.
 import {
   BlockNode,
   PayloadLexicalReactRenderer,
-} from "@atelier-disko/payload-lexical-react-renderer";
+} from "@oudwins/payload-lexical-react-renderer";
 
 type Intro = {
   text: string;
