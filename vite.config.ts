@@ -12,6 +12,7 @@ export default defineConfig({
     react(),
     dts({
       insertTypesEntry: true,
+      exclude: ["src/test", "src/**/*.test.tsx", "src/main.tsx"],
     }),
   ],
   test: {
@@ -27,7 +28,8 @@ export default defineConfig({
       name: "payload-lexical-react-renderer",
       formats: ["es", "umd"],
       // the proper extensions will be added
-      fileName: (format) => `payload-lexical-react-renderer.${format}.js`,
+      fileName: (format) =>
+        `payload-lexical-react-renderer.${format}.${format === "umd" ? "cjs" : "js"}`,
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
